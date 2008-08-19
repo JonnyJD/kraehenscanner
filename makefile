@@ -3,6 +3,7 @@ LFLAGS :=
 CC     := gcc
 CCW    := i486-mingw32-gcc
 CFLAGS := -Wall -pedantic
+VERSION := 1.4
 
 bin/kskscanner: src/kskscanner.o
 	$(CC) $(CFLAGS) $^ -o $@
@@ -18,16 +19,16 @@ src/kskscanner.w32.o: src/kskscanner.c
 install:
 	cp bin/kskscanner ~/bin
 
-packages: kskscanner.src.tgz kskscanner.w32.zip
+packages: kskscanner-$(VERSION).src.tgz kskscanner-$(VERSION).w32.zip
 
-kskscanner.src.tgz:
+kskscanner-$(VERSION).src.tgz:
 	make clean
 	mkdir kskscanner
 	cp -a src kskscanner
 	cp makefile kskscanner
 	tar -cvzf $@ kskscanner
 
-kskscanner.w32.zip: bin/kskscanner.exe
+kskscanner-$(VERSION).w32.zip: bin/kskscanner.exe
 	make clean
 	mkdir kskscanner
 	cp -a src kskscanner
@@ -36,7 +37,7 @@ kskscanner.w32.zip: bin/kskscanner.exe
 	cp kskscanner.bat kskscanner
 	zip -r $@ kskscanner
 
-upload: kskscanner.src.tgz kskscanner.w32.zip
+upload: kskscanner-$(VERSION).src.tgz kskscanner-$(VERSION).w32.zip
 	./upload
 
 clean:
