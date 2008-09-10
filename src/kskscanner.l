@@ -348,7 +348,7 @@ void putName(char * name) {
 void genValue(float textval) {
 	char * name;
 	float val;
-	name = malloc(100*sizeof(char));
+	name = malloc(100);
 	if(isAlly) {
 		printf("%8.2f\t", textval);
 		itemval *= textval;
@@ -396,7 +396,7 @@ int main(int argc, char* argv[]) {
 	printf("%s\n", version);
 	printf("Aufgerufen am: %s", ctime(&jetzt));
 
-	item = malloc(100*sizeof(char));
+	item = malloc(100);
 
 	if (argc < 2) yyin = stdin;
 	else {
