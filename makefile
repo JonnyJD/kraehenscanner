@@ -2,13 +2,24 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-CFLAGS := -Wall -pedantic
-VERSION := 1.4
+VERSION := 1.4.1
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 14.9.2008"'
+CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
+
+linux: bin/kskscanner
+
+all: linux static w32
+
+static: bin/kskscanner.cgi
+
+w32: bin/kskscanner.exe
 
 bin/kskscanner: src/kskscanner.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-w32: bin/kskscanner.exe
+bin/kskscanner.cgi: src/kskscanner.o
+	$(CC) $(CFLAGS) --static $^ -o $@
+
 
 bin/kskscanner.exe: src/kskscanner.w32.o
 	$(CCW) $(CFLAGS) $^ -o $@
@@ -41,4 +52,4 @@ upload: kskscanner-$(VERSION).src.tgz kskscanner-$(VERSION).w32.zip
 	./upload
 
 clean:
-	rm -rf src/*.o src/kskscanner.c kskscanner
+	rm -rf src/*.o src/kskscanner.c bin/kskscanner bin/kskscanner.cgi bin/kskscanner.exe

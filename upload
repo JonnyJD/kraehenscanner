@@ -1,5 +1,9 @@
 #!/bin/bash
 echo "cd alirion
-put kskscanner-1.4.src.tgz
-put kskscanner-1.4.w32.zip
+put kskscanner-1.4.1-src.tgz
+put kskscanner-1.4.1-w32.zip
+cd ..
+lcd bin
+cd cgi-bin
+put kskscanner.cgi
 bye" | ftp ksk.JonnyJD.net

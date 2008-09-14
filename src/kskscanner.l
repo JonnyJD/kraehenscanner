@@ -11,9 +11,10 @@
 #include <string.h>
 #include <time.h>
 
-char *version = "kskscanner - Version 1.4.0.0 vom 20.5.2008";
+const char *version = "kskscanner - Version 1.4.1 vom 14.9.2008";
 
-char *preisdatei = "preise";
+const char *preisdatei = "preise";
+const char *cgi_name = "kskscanner.cgi";
 time_t jetzt;
 extern FILE* yyin;
 float itemval, sum;
@@ -393,7 +394,10 @@ void loadPrices() {
 
 int main(int argc, char* argv[]) {
 	jetzt = time(NULL);
-	printf("%s\n", version);
+	if (strcmp(argv[0], cgi_name) == 0) {
+		printf("Content-type: text/plain\n\n");
+	}
+	printf("%s\n", VERSIONSTRING);
 	printf("Aufgerufen am: %s", ctime(&jetzt));
 
 	item = malloc(100);
