@@ -11,8 +11,6 @@
 #include <string.h>
 #include <time.h>
 
-const char *version = "kskscanner - Version 1.4.1 vom 14.9.2008";
-
 const char *preisdatei = "preise";
 const char *cgi_name = "kskscanner.cgi";
 time_t jetzt;
