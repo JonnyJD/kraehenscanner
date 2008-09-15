@@ -51,7 +51,7 @@ PF	([^/]*\/)
  /* Reichsressourcen - rbrinfo0.*, rbrinfo.* */
 %s RR
 %x RNAME
-%x RGUT RGUT2 RNUM
+%x RGUT RGUT2 RGUTB RGUT3 RNUM
 
  /* Top Ten - rbtop10.* */
 %s TT
@@ -62,7 +62,7 @@ PF	([^/]*\/)
 
  /* ----------------- Seitenerkennung  ---------------------------- */
 
-"<font size=6 face=\"Diploma\">Dorf "	{ BEGIN(HNAME); }
+"<font size="\"?6\"?" face=\"Diploma\">Dorf "	{ BEGIN(HNAME); }
 <HNAME>[^<]*	{
 		  if(strcmp(yytext,"Leipia, Handelsbude") == 0) {
 			isAlly = 1;
@@ -75,7 +75,7 @@ PF	([^/]*\/)
 		}
 <HNAME>"<"				{ BEGIN(HB); /* Handelsbude */ }
 
-"<font size=6 face=\"Diploma\">Ressourcen im "	{ BEGIN(RNAME); }
+"<font size="\"?6\"?" face=\"Diploma\">Ressourcen im "	{ BEGIN(RNAME); }
 <RNAME>[^<]*	{
 		  loadPrices();
 		  printf("\nRessourcen im %s\n", yytext);
@@ -83,7 +83,7 @@ PF	([^/]*\/)
 		}
 <RNAME>"<"	{ BEGIN(RR); /* Reichsressourcen */ }
 
-"<font size=6 face=\"Diploma\">TOP 10"	{
+"<font size="\"?6\"?" face=\"Diploma\">TOP 10"	{
 					  printf("\nAllianzpunkte");
 					  printf("\t\t\t\t\t\tSchnitt\n");
 					  printf("- - - - - - -\n");
@@ -109,7 +109,7 @@ PF	([^/]*\/)
 				  itemval = atoi(yytext);
 				  printf("%6.0f\t", itemval);
 				}
-<GNUM>{TAGS}{27,30}{VAR}{6}	{ BEGIN(GVAL); }
+<GNUM>{TAGS}{27,30}[^>]*"value=\""	{ BEGIN(GVAL); }
 <GNUM>.|\n			{ ECHO; }
 
 <GVAL>[0-9.]*			{ genValue(atof(yytext)); }
@@ -119,7 +119,7 @@ PF	([^/]*\/)
 
  /* -------------- HB Gegenstaende -------------------- */
 
-<HB>"<img src=\""{PF}{6}"st"[0-9]*".gif\" border=0>"	{ BEGIN(ST); }
+<HB>"<img src=\""{PF}{6}"st"[0-9]*".gif\" border="\"?0\"?>	{ BEGIN(ST); }
 <ST>[^<]*			{ putName(yytext); }
 <ST>{TAGN}{5}([0-9]*"/")*	{ BEGIN(SNUM); }
 
@@ -127,7 +127,7 @@ PF	([^/]*\/)
 				  itemval = atoi(yytext);
 				  printf("%6.0f\t", itemval);
 				}
-<SNUM>{TAGS}{27,33}{VAR}{6}	{ BEGIN(SVAL); }
+<SNUM>{TAGS}{27,33}[^>]*"value=\""	{ BEGIN(SVAL); }
 <SNUM>.|\n			{ ECHO; }
 
 <SVAL>[0-9.]*			{ genValue(atof(yytext)); }
@@ -136,21 +136,25 @@ PF	([^/]*\/)
 
  /* -------------------- RR Gueter und Gegenstaende ---------------------- */
 
-<RR>"<IMG SRC=\""{PF}{6}"gut"[0-9]*".gif\" border=0>&nbsp;"	{ BEGIN(RGUT); /* Gut */}
-<RR>"<img src=\""{PF}{6}"gut"[0-9]*".gif\" border=0>&nbsp;"	{ BEGIN(RGUT); /* Gut */}
-<RR>"<IMG SRC=\""{PF}{6}"st"[0-9]*".gif\" border=0>"	{
+<RR>"<"(IMG|img)" "(SRC|src)"=\""{PF}{6}"gut"[0-9]*".gif\" border="\"?0\"?">&nbsp;"	{ BEGIN(RGUTB); /* Gut */}
+<RR>"<"(IMG|img)" "(SRC|src)"=\""{PF}{6}"st"[0-9]*".gif\" border="\"?0\"?">"	{
 				  BEGIN(RGUT); /* Gegenstand rbrinfo.* */ }
 <RR>"<a href=\"javascript:fensterSache("[0-9]*")\">"	{
 				  BEGIN(RGUT); /* Gegenstand rbrinfo.* */ }
 
-<RGUT>"<"			{ BEGIN(RR); /* anders bei rbrinfo Gegenst. */ }
+<RGUT,RGUTB>"<"			{ BEGIN(RR); /* anders bei rbrinfo Gegenst. */ }
 <RGUT>[^<]*			{
 				  putName(yytext);
 				  BEGIN(RGUT2);
 				}
-<RGUT2>"<b>"				{ BEGIN(RNUM); /* rbrinfo0.* */ }
-<RGUT2>"</td><td>"			{ BEGIN(RNUM); }
-<RGUT2>"<td>"				{ BEGIN(RNUM); /*Umlautschluckung */ }
+<RGUTB>[^<]*			{
+				  putName(yytext);
+				  BEGIN(RGUT3);
+				}
+<RGUT2,RGUT3>"<b>"			{ BEGIN(RNUM); /* rbrinfo0.* */ }
+<RGUT3>"</td><td>"			{ BEGIN(RNUM); }
+
+<RGUT3>"<td>"				{ BEGIN(RNUM); /*Umlautschluckung */ }
 <RGUT2>"</td><td></td><td>"		{ BEGIN(RNUM); }
 <RGUT2>"<td></td>\n<td>"		{ BEGIN(RNUM); }
 <RGUT2>"<td>&nbsp;"[0-9]+"</td><td>"	{ BEGIN(RNUM); /* rbrinfo.* */ }
@@ -161,8 +165,7 @@ PF	([^/]*\/)
 				  genValue(-1.0);
 				  BEGIN(RR);
 				}
-<RGUT2>.|\n			{ /* ueberlesen */ }
-
+<RGUT2,RGUT3>.|\n		{ /* ueberlesen */ }
 <RNUM>[0-9]*			{
 				  itemval = atoi(yytext);
 				  printf("%6.0f\t", itemval);
@@ -175,7 +178,7 @@ PF	([^/]*\/)
 
  /* ------------- Top 10 ---------------------------- */
 
-<TT>"<b>"[0-9]*".</b></td><td valign=bottom><b>"[^<]*"</b></td><td valign=bottom>"				{ BEGIN(PLR); }
+<TT>"<b>"[0-9]*".</b></td><td valign="\"?bottom\"?"><b>"[^<]*"</b></td><td valign="\"?bottom\"?">"				{ BEGIN(PLR); }
 <PLR>[0-9]*			{
 				  sum += atoi(yytext);
 				  num++;
@@ -186,10 +189,10 @@ PF	([^/]*\/)
 <TT>"["				{ BEGIN(TAL);  }
 
 <ALLY>[0-9]*				{ allynum = atoi(yytext); }
-<ALLY>".gif\" border=0></td><td valign=bottom>"	{ BEGIN(AVAL); }
+<ALLY>".gif\" border="\"?0\"?"></td><td valign="\"?bottom\"?">"	{ BEGIN(AVAL); }
 
 <TAL>[^\]]*				{ allynum = id(yytext); }
-<TAL>"]</b></td><td valign=bottom>"	{ BEGIN(AVAL); }
+<TAL>"]</b></td><td valign="\"?bottom\"?">"	{ BEGIN(AVAL); }
 
 <AVAL>[0-9]*			{
 				  aval[allynum] += atoi(yytext);
@@ -238,7 +241,7 @@ PF	([^/]*\/)
 		  return 0;
 		}
 
-.|\n			{ /* uninteresting */ }
+.|\n			{ /*printf("%s",yytext);*//* uninteresting */ }
 <INITIAL><<EOF>>	{ return 0; }
 
 %%
@@ -322,6 +325,16 @@ void putName(char * name) {
 			case '\xE4': strcat(newname, "ae"); i++; break;
 			case '\xF6': strcat(newname, "oe"); i++; break;
 			case '\xFC': strcat(newname, "ue"); i++; break;
+			case '\xC3':
+				switch(name[++i]) {
+			case '\x84': strcat(newname, "Ae"); i++; break;
+			case '\x96': strcat(newname, "Oe"); i++; break;
+			case '\x9C': strcat(newname, "Ue"); i++; break;
+			case '\x9F': strcat(newname, "ss"); i++; break;
+			case '\xA4': strcat(newname, "ae"); i++; break;
+			case '\xB6': strcat(newname, "oe"); i++; break;
+			case '\xBC': strcat(newname, "ue"); i++; break;
+				} break;
 			case '&':
 				i++;
 				if (name[i] == 's') {
@@ -400,8 +413,10 @@ int main(int argc, char* argv[]) {
 
 	item = malloc(100);
 
-	if (argc < 2) yyin = stdin;
-	else {
+	if (argc < 2) {
+		yyin = stdin;
+		yylex();
+	} else {
 		int i, j;
 		for (i=1; i<argc; i++) {
 			isAlly = 0; sum = 0; num = 0;
