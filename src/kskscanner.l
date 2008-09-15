@@ -86,7 +86,7 @@ PF	([^/]*\/)
 "<font size="\"?6\"?" face=\"Diploma\">TOP 10"	{
 					  printf("\nAllianzpunkte");
 					  printf("\t\t\t\t\t\tSchnitt\n");
-					  printf("- - - - - - -\n");
+					  printf("- - - - - - -%50c\n", ' ');
 					  BEGIN(TT);
 					}
 
@@ -235,7 +235,7 @@ PF	([^/]*\/)
 			}
 			pos++;
 		  } while (max > 0);
-		  printf("\t\t\t\t\t--------\n");
+		  printf("\t\t\t\t\t--------%15c\n", ' ');
 		  printf("Gesamt\t\t\t\t\t%8.0f", sum);
 		  printf("%5d%10.0f\n\n", num, sum/num);
 		  return 0;
