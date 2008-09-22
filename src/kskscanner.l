@@ -337,7 +337,7 @@ int id(char * tag)
 void putName(char * name)
 {
     int i;
-    chr * newName;
+    char * newName;
 
     /* Standardisierung der Umlaute */
     newName = malloc(strlen(name)*2);
