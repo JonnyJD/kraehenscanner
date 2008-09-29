@@ -2,8 +2,8 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-VERSION := 1.4.1
-VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 14.9.2008"'
+VERSION := 1.4.2
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 29.9.2008"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner
@@ -30,26 +30,29 @@ src/kskscanner.w32.o: src/kskscanner.c
 install: bin/kskscanner
 	cp bin/kskscanner ~/bin
 
-packages: kskscanner-$(VERSION).src.tgz kskscanner-$(VERSION).w32.zip
+packages: kskscanner-$(VERSION)-w32.zip kskscanner-$(VERSION)-src.tgz
 
-kskscanner-$(VERSION).src.tgz:
-	make clean
+kskscanner-$(VERSION)-src.tgz:
+	make mostly-clean
 	mkdir kskscanner
 	cp -a src kskscanner
-	cp makefile kskscanner
+	cp Makefile kskscanner
 	tar -cvzf $@ kskscanner
 
-kskscanner-$(VERSION).w32.zip: bin/kskscanner.exe
-	make clean
+kskscanner-$(VERSION)-w32.zip: bin/kskscanner.exe
+	make mostly-clean
 	mkdir kskscanner
 	cp -a src kskscanner
-	cp makefile kskscanner
+	cp Makefile kskscanner
 	cp $^ kskscanner
 	cp kskscanner.bat kskscanner
 	zip -r $@ kskscanner
 
-upload: kskscanner-$(VERSION).src.tgz kskscanner-$(VERSION).w32.zip
+upload: static packages
 	./upload
 
-clean:
-	rm -rf src/*.o src/kskscanner.c bin/kskscanner bin/kskscanner.cgi bin/kskscanner.exe
+mostly-clean:
+	rm -rf src/*.o src/kskscanner.c kskscanner/
+
+clean: mostly-clean
+	rm -rf bin/kskscanner bin/kskscanner.cgi bin/kskscanner.exe
