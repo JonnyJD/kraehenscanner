@@ -49,7 +49,7 @@ kskscanner-$(VERSION)-w32.zip: bin/kskscanner.exe
 	zip -r $@ kskscanner
 
 upload: static packages
-	./upload
+	export VERSION=$(VERSION) && ./upload
 
 mostly-clean:
 	rm -rf src/*.o src/kskscanner.c kskscanner/

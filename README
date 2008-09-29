@@ -19,7 +19,3 @@ Anleitung:
 Zum kompilieren: "make"
 Zum packen: "make packages"
 Zum hochladen: "make upload"
-
-
-Anmerkungen:
-Bei jeder neuen Version sollte der Versionsstring in der Quelldatei, die VERSION in der makefile und die Dateinamen in der Datei upload geändert werden.
