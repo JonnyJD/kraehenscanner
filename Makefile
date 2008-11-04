@@ -8,18 +8,12 @@ CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner
 
-all: linux static w32
-
-static: bin/kskscanner.cgi
+all: linux w32
 
 w32: bin/kskscanner.exe
 
 bin/kskscanner: src/kskscanner.o
 	$(CC) $(CFLAGS) $^ -o $@
-
-bin/kskscanner.cgi: src/kskscanner.o
-	$(CC) $(CFLAGS) --static $^ -o $@
-
 
 bin/kskscanner.exe: src/kskscanner.w32.o
 	$(CCW) $(CFLAGS) $^ -o $@
@@ -48,7 +42,7 @@ kskscanner-$(VERSION)-w32.zip: bin/kskscanner.exe
 	cp kskscanner.bat kskscanner
 	zip -r $@ kskscanner
 
-upload: static packages
+upload: packages
 	export VERSION=$(VERSION) && ./upload
 
 mostly-clean:

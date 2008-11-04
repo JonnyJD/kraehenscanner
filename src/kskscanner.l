@@ -12,7 +12,7 @@
 #include <time.h>
 
 const char *priceFile = "preise";
-const char *cgiName = "kskscanner.cgi";
+const char *cgiName = "/usr/lib/cgi-bin/kskscanner";
 time_t now;
 extern FILE* yyin;
 float itemVal, sum;

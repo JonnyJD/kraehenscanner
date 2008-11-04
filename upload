@@ -3,7 +3,4 @@ echo "cd alirion
 put kskscanner-$VERSION-src.tgz
 put kskscanner-$VERSION-w32.zip
 cd ..
-lcd bin
-cd cgi-bin
-put kskscanner.cgi
 bye" | ftp ksk.JonnyJD.net
