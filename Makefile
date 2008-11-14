@@ -21,8 +21,11 @@ bin/kskscanner.exe: src/kskscanner.w32.o
 src/kskscanner.w32.o: src/kskscanner.c
 	$(CCW) $(CFLAGS) -c -o $@ $^
 
-install: bin/kskscanner
+install-home: bin/kskscanner
 	cp bin/kskscanner ~/bin
+
+install-server: bin/kskscanner
+	sudo cp bin/kskscanner /usr/lib/cgi-bin/
 
 packages: kskscanner-$(VERSION)-w32.zip kskscanner-$(VERSION)-src.tgz
 

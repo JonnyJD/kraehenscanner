@@ -334,6 +334,7 @@ int id(char * tag)
     else if (strcmp(tag,"RK")  == 0) return 67;
     else if (strcmp(tag,"NA")  == 0) return 68;
     else if (strcmp(tag,"&quot;W&quot;")  == 0) return 69;
+    else if (strcmp(tag,"\"W\"")  == 0) return 69;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
