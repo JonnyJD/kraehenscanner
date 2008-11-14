@@ -299,6 +299,7 @@ char * ally(int id)
         case 66: return("Dvergr altvorderer Waechter\t[DAW]"); break;
         case 67: return("Raziels Klingen\t\t[RK]");            break;
         case 68: return("Die Nebel von Avalon\t[NA]");         break;
+        case 69: return("Wiederstand\t\t\t[\"W\"]");           break;
         case 99: return("Test Spielleitung\t\t[G]");           break;
         default: return("?\t\t\t\t");                          break;
     }
@@ -332,6 +333,7 @@ int id(char * tag)
     else if (strcmp(tag,"DAW") == 0) return 66;
     else if (strcmp(tag,"RK")  == 0) return 67;
     else if (strcmp(tag,"NA")  == 0) return 68;
+    else if (strcmp(tag,"&quot;W&quot;")  == 0) return 69;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
