@@ -300,6 +300,7 @@ char * ally(int id)
         case 67: return("Raziels Klingen\t\t[RK]");            break;
         case 68: return("Die Nebel von Avalon\t[NA]");         break;
         case 69: return("Wiederstand\t\t\t[\"W\"]");           break;
+        case 70: return("Nordwind\t\t\t[NW]");                 break;
         case 99: return("Test Spielleitung\t\t[G]");           break;
         default: return("?\t\t\t\t");                          break;
     }
@@ -307,7 +308,7 @@ char * ally(int id)
 
 int id(char * tag)
 {
-    if      (strcmp(tag,"MAG") == 0) return 16;
+    if      (strcmp(tag,"EOR") == 0) return 16;
     else if (strcmp(tag,"SL")  == 0) return 17;
     else if (strcmp(tag,"ZdE") == 0) return 18;
     else if (strcmp(tag,"NoS") == 0) return 22;
@@ -335,6 +336,7 @@ int id(char * tag)
     else if (strcmp(tag,"NA")  == 0) return 68;
     else if (strcmp(tag,"&quot;W&quot;")  == 0) return 69;
     else if (strcmp(tag,"\"W\"")  == 0) return 69;
+    else if (strcmp(tag,"NW")  == 0) return 70;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
