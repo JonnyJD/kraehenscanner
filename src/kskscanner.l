@@ -13,6 +13,8 @@
 
 const char *priceFile = "preise";
 const char *cgiName = "/usr/lib/cgi-bin/kskscanner";
+int maxIOBuffer = 100000;
+const char *tmpFileName = "_kskscanner_tmpFile";
 time_t now;
 extern FILE* yyin;
 float itemVal, sum;
@@ -448,17 +450,36 @@ void loadPrices()
 
 int main(int argc, char* argv[])
 {
+    int contentLength;
+    FILE* tmpFile;
+
     now = time(NULL);
     if (strcmp(argv[0], cgiName) == 0) {
         printf("Content-type: text/plain\n\n");
+        contentLength = atoi(getenv("CONTENT_LENGTH"));
+    } else {
+        /* ausserhalb cgi unbeschraenkt */
+        contentLength = 0;
     }
     printf("%s\n", VERSIONSTRING);
     printf("Aufgerufen am: %s", ctime(&now));
 
     item = malloc(100);
 
-    if (argc < 2) {
+    if (argc < 2 && contentLength < maxIOBuffer) {
         yyin = stdin;
+        yylex();
+    } else if (argc < 2) {
+        /* von stdin, aber passt nicht in buffer
+           schreibe in tmpFile um deadlock zu verhindern
+           siehe bug #14
+         */
+        tmpFile = fopen(tmpFileName, "w");
+        while (!feof(stdin)) {
+            fprintf(tmpFile, "%c", getchar());
+        }
+        fclose(tmpFile);
+        yyin = fopen(tmpFileName, "r");
         yylex();
     } else {
         int i, j;
