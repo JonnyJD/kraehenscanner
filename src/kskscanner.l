@@ -64,7 +64,7 @@ PF    ([^/]*\/)
 
  /* ----------------- Seitenerkennung  ---------------------------- */
 
-"<font size="\"?6\"?" face=\"Diploma\">Dorf "    {
+("<font size="\"?6\"?" face=\"Diploma\">Dorf "|"<font face=\"Diploma\" size="\"?6\"?">Dorf ")    {
                         BEGIN(HNAME);
                     }
 <HNAME>[^<]*        {
@@ -83,7 +83,7 @@ PF    ([^/]*\/)
     }
 <HNAME>"<"          {   BEGIN(HB); /* Handelsbude */ }
 
-"<font size="\"?6\"?" face=\"Diploma\">Ressourcen im "    {
+("<font size="\"?6\"?" face=\"Diploma\">Ressourcen im "|"<font face=\"Diploma\" size="\"?6\"?">Ressourcen im ")    {
                         BEGIN(RNAME);
                     }
 <RNAME>[^<]*        {
@@ -93,7 +93,7 @@ PF    ([^/]*\/)
     }
 <RNAME>"<"          {   BEGIN(RR); /* Reichsressourcen */ }
 
-"<font size="\"?6\"?" face=\"Diploma\">TOP 10"    {
+("<font size="\"?6\"?" face=\"Diploma\">TOP 10"|"<font face=\"Diploma\" size="\"?6\"?">TOP 10")    {
                         printf("\nAllianzpunkte");
                         printf("\t\t\t\t\t\tSchnitt\n");
                         printf("- - - - - - -%50c\n", ' ');
