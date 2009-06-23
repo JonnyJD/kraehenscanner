@@ -276,7 +276,7 @@ char * ally(int id)
 {
     switch (id) {
         case 16: return("Magistraten der Caldea\t[MAG]");      break;
-        case 17: return("Koenigliche Allianz\t[SL]");          break;
+        case 17: return("Koenigliche Allianz\t\t[SL]");        break;
         case 18: return("Zirkel der Erklaerten\t[ZdE]");       break;
         case 22: return("Nations of Senoi\t\t[NoS]");          break;
         case 23: return("SzasKhar\t\t[SK]");                   break;

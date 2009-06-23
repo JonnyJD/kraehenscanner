@@ -2,8 +2,8 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-VERSION := 1.4.5
-VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 12.06.2009"'
+VERSION := 1.4.6
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 23.06.2009"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner
@@ -20,6 +20,9 @@ bin/kskscanner.exe: src/kskscanner.w32.o
 
 src/kskscanner.w32.o: src/kskscanner.c
 	$(CCW) $(CFLAGS) -c -o $@ $^
+
+# wegen der Versionsnummer in der Makefile
+src/kskscanner.c: Makefile
 
 install-home: bin/kskscanner
 	cp bin/kskscanner ~/bin
