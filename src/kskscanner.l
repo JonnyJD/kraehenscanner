@@ -68,7 +68,7 @@ PF    ([^/]*\/)
                         BEGIN(HNAME);
                     }
 <HNAME>[^<]*        {
-        if(strcmp(yytext,"Leipia, Handelsbude") == 0) {
+        if(strcmp(yytext,"Vogia, Handelsbude") == 0) {
           isAlly = 1;
           prices = fopen(priceFile,"w");
           fprintf(prices,"Zeitstempel\t%ld\n", now);
