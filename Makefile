@@ -26,6 +26,7 @@ src/kskscanner.c: Makefile
 
 install-home: bin/kskscanner
 	cp bin/kskscanner ~/bin
+	sudo cp bin/kskscanner /srv/http/cgi-bin
 
 install-server: bin/kskscanner
 	sudo cp bin/kskscanner /usr/lib/cgi-bin/

@@ -12,7 +12,6 @@
 #include <time.h>
 
 const char *priceFile = "preise";
-const char *cgiName = "/usr/lib/cgi-bin/kskscanner";
 int maxIOBuffer = 100000;
 const char *tmpFileName = "_kskscanner_tmpFile";
 time_t now;
@@ -456,7 +455,7 @@ int main(int argc, char* argv[])
     FILE* tmpFile;
 
     now = time(NULL);
-    if (strcmp(argv[0], cgiName) == 0) {
+    if (strstr(argv[0], "cgi-bin") != NULL) {
         printf("Content-type: text/plain\n\n");
         contentLength = atoi(getenv("CONTENT_LENGTH"));
     } else {
