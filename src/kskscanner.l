@@ -349,6 +349,17 @@ void putName(char * name)
     int i;
     char * newName;
 
+    /* Konstanten fuer die Umlaute
+     * momentan in UTF-8 standardisiert
+     */
+    char * Ae = "\xC3\x84";
+    char * Oe = "\xC3\x96";
+    char * Ue = "\xC3\x9C";
+    char * ss = "\xC3\x9F";
+    char * ae = "\xC3\xA4";
+    char * oe = "\xC3\xB6";
+    char * ue = "\xC3\xBC";
+
     /* Standardisierung der Umlaute */
     newName = malloc(strlen(name)*2);
     newName[0] = 0;
@@ -356,33 +367,44 @@ void putName(char * name)
     while (i < strlen(name)) {
         switch (name[i]) {
             /* latin-1, 1 byte */
-            case '\xC4': strcat(newName, "Ae"); i++; break;
-            case '\xD6': strcat(newName, "Oe"); i++; break;
-            case '\xDC': strcat(newName, "Ue"); i++; break;
-            case '\xDF': strcat(newName, "ss"); i++; break;
-            case '\xE4': strcat(newName, "ae"); i++; break;
-            case '\xF6': strcat(newName, "oe"); i++; break;
-            case '\xFC': strcat(newName, "ue"); i++; break;
+            case '\xC4': strcat(newName, Ae); i++; break;
+            case '\xD6': strcat(newName, Oe); i++; break;
+            case '\xDC': strcat(newName, Ue); i++; break;
+            case '\xDF': strcat(newName, ss); i++; break;
+            case '\xE4': strcat(newName, ae); i++; break;
+            case '\xF6': strcat(newName, oe); i++; break;
+            case '\xFC': strcat(newName, ue); i++; break;
             /* UTF-8, 2 bytes */
+            /* unnoetig, da inzwischen UTF-8 das Ziel ist
             case '\xC3':
                 switch(name[++i]) {
-                    case '\x84': strcat(newName, "Ae"); i++; break;
-                    case '\x96': strcat(newName, "Oe"); i++; break;
-                    case '\x9C': strcat(newName, "Ue"); i++; break;
-                    case '\x9F': strcat(newName, "ss"); i++; break;
-                    case '\xA4': strcat(newName, "ae"); i++; break;
-                    case '\xB6': strcat(newName, "oe"); i++; break;
-                    case '\xBC': strcat(newName, "ue"); i++; break;
+                    case '\x84': strcat(newName, Ae); i++; break;
+                    case '\x96': strcat(newName, Oe); i++; break;
+                    case '\x9C': strcat(newName, Ue); i++; break;
+                    case '\x9F': strcat(newName, ss); i++; break;
+                    case '\xA4': strcat(newName, ae); i++; break;
+                    case '\xB6': strcat(newName, oe); i++; break;
+                    case '\xBC': strcat(newName, ue); i++; break;
                 } break;
+            */
             /* HTML entities */
             case '&':
                 i++;
                 if (name[i] == 's') {
-                    strcat(newName, "ss");
+                    strcat(newName, ss);
                     i += 6;
                 } else {
-                    strncat(newName, &name[i], 1);
-                    strncat(newName, "e", 1);
+                    switch(name[i]) {
+                        case 'A': strcat(newName, Ae); break;
+                        case 'O': strcat(newName, Oe); break;
+                        case 'U': strcat(newName, Ue); break;
+                        case 'a': strcat(newName, ae); break;
+                        case 'o': strcat(newName, oe); break;
+                        case 'u': strcat(newName, ue); break;
+                        default:
+                            strncat(newName, &name[i], 1);
+                            strncat(newName, "e", 1);
+                    }
                     i += 5;
                 }
                 break;
