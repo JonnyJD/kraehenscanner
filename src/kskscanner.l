@@ -478,8 +478,21 @@ int main(int argc, char* argv[])
 
     now = time(NULL);
     if (strstr(argv[0], "cgi-bin") != NULL) {
+        printf("Access-Control-Allow-Origin: http://www.ritterburgwelt.de\n");
+        printf("Access-Control-Allow-Credentials: true\n");
+        if (getenv("REQUEST_METHOD")
+                && strcmp(getenv("REQUEST_METHOD"), "OPTIONS") == 0) {
+            printf("Access-Control-Allow-Methods: POST\n");
+            printf("Access-Control-Allow-Headers: Content-type\n");
+            printf("Access-Control-Max-Age: 86400\n\n"); /* 24 h */
+            exit(0);
+        }
         printf("Content-type: text/plain\n\n");
-        contentLength = atoi(getenv("CONTENT_LENGTH"));
+        if (getenv("CONTENT_LENGTH")) {
+            contentLength = atoi(getenv("CONTENT_LENGTH"));
+        } else {
+            contentLength = 0;
+        }
     } else {
         /* ausserhalb cgi unbeschraenkt */
         contentLength = 0;
