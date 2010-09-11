@@ -3,7 +3,7 @@ LFLAGS :=
 CC     := gcc
 CCW    := i486-mingw32-gcc
 VERSION := 1.4.8
-VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 10.09.2010"'
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 11.09.2010"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner

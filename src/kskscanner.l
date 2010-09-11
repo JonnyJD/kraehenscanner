@@ -482,7 +482,7 @@ int main(int argc, char* argv[])
         printf("Access-Control-Allow-Credentials: true\n");
         if (getenv("REQUEST_METHOD")
                 && strcmp(getenv("REQUEST_METHOD"), "OPTIONS") == 0) {
-            printf("Access-Control-Allow-Methods: POST\n");
+            printf("Access-Control-Allow-Methods: POST, GET\n");
             printf("Access-Control-Allow-Headers: Content-type\n");
             printf("Access-Control-Max-Age: 86400\n\n"); /* 24 h */
             exit(0);
