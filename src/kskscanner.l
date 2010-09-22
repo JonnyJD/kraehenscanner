@@ -10,13 +10,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#define NO_HB 0
+#define IS_HB 1
+#define FALSE 0
+#define TRUE 1
 
 const char *priceFile = "preise";
 int maxIOBuffer = 100000;
 const char *tmpFileName = "_kskscanner_tmpFile";
 time_t now;
 extern FILE* yyin;
-float itemVal, sum;
+int isSold, soldNum, keptNum;
+float itemVal, sum, keptSum;
 int allyNum, num;
 int aVal[100], aNum[100];
 
@@ -24,11 +29,12 @@ int aVal[100], aNum[100];
 int isAlly;
 char * item;
 FILE * prices;
-void genValue(float textVal);
+void genValue(float textVal, int isHB);
 void loadPrices();
 
 /* Hilfsfunktionen */
 void putName(char * name);
+void genNum(int keepNum);
 
 /* fuer die Allianzstatistik */
 char * ally(int id);
@@ -46,8 +52,9 @@ PF    ([^/]*\/)
  /* Handelsbude - rbfhandel1.* */
 %s HB
 %x HNAME
-%x GUT GNUM GKM GVAL
-%x ST SNUM SVAL
+%x GUT GKM GKM2 GNUM GNUM2 GNUM3 GVAL
+%x ST SNUM SNUM2 SNUM3 SVAL
+%x COMMENT
 
  /* Reichsressourcen - rbrinfo0.*, rbrinfo.* */
 %s RR
@@ -78,7 +85,8 @@ PF    ([^/]*\/)
         if(isAlly) {
             printf(" - Allianzbude - \n");
         }
-        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+        printf("- - - - - - - - - -\n");
     }
 <HNAME>"<"          {   BEGIN(HB); /* Handelsbude */ }
 
@@ -88,7 +96,7 @@ PF    ([^/]*\/)
 <RNAME>[^<]*        {
         loadPrices();
         printf("\nRessourcen im %s\n", yytext);
-        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
     }
 <RNAME>"<"          {   BEGIN(RR); /* Reichsressourcen */ }
 
@@ -105,25 +113,38 @@ PF    ([^/]*\/)
 <HB>"<img src=\""{PF}{6}"gut"[0-9]*".gif\">&nbsp;"    {
                                             BEGIN(GUT);
                                         }
+
 <GUT>[^<]*                              {   putName(yytext); }
 <GUT>{TAGN}{5}                          {   BEGIN(GNUM); }
 <GUT>{TAGN}{4}                          {   BEGIN(GKM); }
 
-<GKM>[0-9]*                             {
-                                            itemVal = atoi(yytext);
-                                            printf("%6.0f\t", itemVal);
-                                            genValue(1.0);
-                                        }
-<GKM>.|\n                               {   BEGIN(HB); }
 
-<GNUM>[0-9]*                            {
-                                            itemVal = atoi(yytext);
-                                            printf("%6.0f\t", itemVal);
-                                        }
-<GNUM>{TAGS}{27,30}[^>]*"value=\""      {   BEGIN(GVAL); }
-<GNUM>.|\n                              {   ECHO; }
+<GKM>[0-9]*                             {   itemVal = atoi(yytext); }
+<GKM>{TAGS}{10,13}[^>]*"value=\""       {   isSold = TRUE; /* bei KM immer */
+                                            BEGIN(GKM2); }
+<GKM>.|\n                               {   ECHO; }
 
-<GVAL>[0-9.]*                           {   genValue(atof(yytext)); }
+<GKM2>[0-9.]*                           {   genNum(atof(yytext)); }
+<GKM2>"\""[^<]*                         {   genValue(1.0, IS_HB); BEGIN(HB); }
+<GKM2>.|\n                              {   ECHO; }
+
+
+<GNUM>[0-9]*                            {   itemVal = atoi(yytext); }
+<GNUM>{TAGS}{21}[^>]*"checked"          {   isSold = TRUE; BEGIN(GNUM2); }
+<GNUM>{TAGS}                            {   /* nothing */ }
+ /* 1 Tag uebersprungen, da sonst type=checkbox immer matcht, da laenger */
+<GNUM>{TAGS}{20}[^>]*"type=\"checkbox\"" {   isSold = FALSE; BEGIN(GNUM2); }
+<GNUM>.|\n                              {   ECHO; printf(" S1 ");}
+
+<GNUM2>[^<]*{TAGS}{3}[^>]*"value=\""    {   BEGIN(GNUM3); }
+<GNUM2>.|\n                             {   ECHO; printf(" S2 ");}
+
+<GNUM3>[0-9.]*                          {   genNum(atof(yytext)); }
+<GNUM3>"\""[^<]*                        {   /* nothing */ }
+<GNUM3>{TAGS}{4}[^>]*"value=\""         {   BEGIN(GVAL); }
+<GNUM3>.|\n                             {   ECHO; printf(" S3 ");}
+
+<GVAL>[0-9.]*                           {   genValue(atof(yytext), IS_HB); }
 <GVAL>"\""                              {   BEGIN(HB); }
 <GVAL>.|\n                              {   /* nothing */ }
 
@@ -136,14 +157,22 @@ PF    ([^/]*\/)
 <ST>[^<]*                               {   putName(yytext); }
 <ST>{TAGN}{5}([0-9]*"/")*               {   BEGIN(SNUM); }
 
-<SNUM>[0-9]*                            {
-                                            itemVal = atoi(yytext);
-                                            printf("%6.0f\t", itemVal);
-                                        }
-<SNUM>{TAGS}{27,33}[^>]*"value=\""      {   BEGIN(SVAL); }
+<SNUM>[0-9]*                            {   itemVal = atoi(yytext); }
+<SNUM>{TAGS}{21,24}[^>]*"checked"       {   isSold = TRUE; BEGIN(SNUM2); }
+<SNUM>{TAGS}                        {   /* nothing */ }
+ /* 4 Tags uebersprungen, da sonst type=checkbox immer matcht, da laenger */
+<SNUM>{TAGS}{17,20}[^>]*"type=\"checkbox\"" {   isSold = FALSE; BEGIN(SNUM2);}
 <SNUM>.|\n                              {   ECHO; }
 
-<SVAL>[0-9.]*                           {   genValue(atof(yytext)); }
+<SNUM2>[^<]*{TAGS}{3}[^>]*"value=\""    {   BEGIN(SNUM3); }
+<SNUM2>.|\n                             {   ECHO; }
+
+<SNUM3>[0-9]*                           {   genNum(atoi(yytext)); }
+<SNUM3>"\""[^<]*                        {   /* nothing */ }
+<SNUM3>{TAGS}{4}[^>]*"value=\""         {   BEGIN(SVAL); }
+<SNUM3>.|\n                             {   ECHO; }
+
+<SVAL>[0-9.]*                           {   genValue(atof(yytext), IS_HB); }
 <SVAL>"\""                              {   BEGIN(HB); }
 <SVAL>.|\n                              {   ECHO; }
 
@@ -184,14 +213,14 @@ PF    ([^/]*\/)
                                             /* kein Wert gefunden = 0 */
                                             itemVal = 0;
                                             printf("%6.0f\t", 0.0);
-                                            genValue(-1.0);
+                                            genValue(-1.0, NO_HB);
                                             BEGIN(RR);
                                         }
 <RGUT2,RGUT3>.|\n                       {   /* ueberlesen */ }
 <RNUM>[0-9]*                            {
                                             itemVal = atoi(yytext);
                                             printf("%6.0f\t", itemVal);
-                                            genValue(itemVal);
+                                            genValue(itemVal, NO_HB);
                                             BEGIN(RR);
                                         }
 <RNUM>[<&]                              {   BEGIN(RGUT2); }
@@ -227,9 +256,16 @@ PF    ([^/]*\/)
 
  /* ------------- Allgemein ------------------------- */
 
-<HB,RR><<EOF>>  {
-                    printf("\t\t\t\t\t\t----------\n");
-                    printf("Summe:\t\t\t\t\t\t%10.2f\n\n", sum);
+<HB><<EOF>>  {
+                    printf("\t\t\t\t\t\t\t ---------- ----------\n");
+                    printf("Summe:\t\t\t\t\t\t\t%11.2f", keptSum);
+                    printf("%11.2f\n\n", sum);
+                    fclose(prices);
+                    return 0;
+                }
+<RR><<EOF>>  {
+                    printf("\t\t\t\t\t\t-----------\n");
+                    printf("Summe:\t\t\t\t\t\t%11.2f\n\n", sum);
                     fclose(prices);
                     return 0;
                 }
@@ -421,14 +457,32 @@ void putName(char * name)
     if (strlen(newName) < 24) printf("\t");
 }
 
-void genValue(float textVal)
+void genNum(int keepNum)
+{
+    int diff;
+    diff = itemVal - keepNum;
+    if (diff > 0 && isSold) {
+        itemVal = diff;
+        soldNum = diff;
+        keptNum = keepNum;
+    } else {
+        keptNum = itemVal;
+        itemVal = 0;
+        soldNum = 0;
+    }
+    printf("%6d\t", keptNum);
+    printf("%6d\t", soldNum);
+}
+
+void genValue(float textVal, int isHB)
 {
     char * name;
-    float val;
+    float val, keptVal;
     name = malloc(100);
     if(isAlly) {
         printf("%8.2f\t", textVal);
         itemVal *= textVal;
+        keptVal = textVal * keptNum;
         /* preisliste schreiben */
         fprintf(prices,"%s\t", item);
         if (strlen(item) <  8) fprintf(prices, "\t");
@@ -444,14 +498,18 @@ void genValue(float textVal)
         if(strcmp(name,item) == 0) {
             printf("%8.2f\t", val);
             itemVal *= val;
+            keptVal = val * keptNum;
         } else {
             printf("     n/a\t");
             itemVal = 0;
+            keptVal = 0;
         }
         rewind(prices);
     }
-    printf("%10.2f\n", itemVal);
+    if (isHB) printf("%11.2f", keptVal);
+    printf("%11.2f\n", itemVal);
     sum += itemVal;
+    keptSum += keptVal;
 }
 
 void loadPrices()
@@ -522,6 +580,7 @@ int main(int argc, char* argv[])
         for (i=1; i<argc; i++) {
             isAlly = 0;
             sum = 0;
+            keptSum = 0;
             num = 0;
             for (j=0; j<100; j++) {
                 aVal[j] = 0;
