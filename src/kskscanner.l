@@ -111,7 +111,7 @@ PF    ([^/]*\/)
 
  /* -------------------- HB Gueter -------------------------------- */
 
-<HB>"<img src=\""{PF}{6}"gut"[0-9]*".gif\">&nbsp;"    {
+<HB>"<img src=\""{PF}{6}"gut"[0-9]*".gif\">"("&nbsp;"|..)?    {
                                             BEGIN(GUT);
                                         }
 
@@ -302,7 +302,7 @@ PF    ([^/]*\/)
                     return 0;
                 }
 
-.|\n            { /*printf("%s",yytext);*/ /* uninteresting */ }
+.|\n            { /* ECHO; printf(" "); *//* uninteresting */ }
 <INITIAL><<EOF>>        { return 0; }
 
 %%
