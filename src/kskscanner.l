@@ -20,8 +20,8 @@ int maxIOBuffer = 100000;
 const char *tmpFileName = "_kskscanner_tmpFile";
 time_t now;
 extern FILE* yyin;
-int isSold, soldNum, keptNum;
-float itemVal, sum, keptSum;
+int isSold, itemNum, soldNum, keptNum;
+float sum, keptSum;
 int allyNum, num;
 int aVal[100], aNum[100];
 
@@ -119,7 +119,7 @@ PF    ([^/]*\/)
 <GUT>{TAGN}{4}                          {   BEGIN(GKM); }
 
 
-<GKM>[0-9]*                             {   itemVal = atoi(yytext); }
+<GKM>[0-9]*                             {   itemNum = atoi(yytext); }
 <GKM>{TAGS}{10,13}[^>]*"value=\""       {   isSold = TRUE; /* bei KM immer */
                                             BEGIN(GKM2); }
 <GKM>.|\n                               {   ECHO; }
@@ -129,7 +129,7 @@ PF    ([^/]*\/)
 <GKM2>.|\n                              {   ECHO; }
 
 
-<GNUM>[0-9]*                            {   itemVal = atoi(yytext); }
+<GNUM>[0-9]*                            {   itemNum = atoi(yytext); }
 <GNUM>{TAGS}{21}[^>]*"checked"          {   isSold = TRUE; BEGIN(GNUM2); }
 <GNUM>{TAGS}                            {   /* nothing */ }
  /* 1 Tag uebersprungen, da sonst type=checkbox immer matcht, da laenger */
@@ -157,7 +157,7 @@ PF    ([^/]*\/)
 <ST>[^<]*                               {   putName(yytext); }
 <ST>{TAGN}{5}([0-9]*"/")*               {   BEGIN(SNUM); }
 
-<SNUM>[0-9]*                            {   itemVal = atoi(yytext); }
+<SNUM>[0-9]*                            {   itemNum = atoi(yytext); }
 <SNUM>{TAGS}{21,24}[^>]*"checked"       {   isSold = TRUE; BEGIN(SNUM2); }
 <SNUM>{TAGS}                        {   /* nothing */ }
  /* 4 Tags uebersprungen, da sonst type=checkbox immer matcht, da laenger */
@@ -211,16 +211,16 @@ PF    ([^/]*\/)
 <RGUT2>"<td>&nbsp;"[0-9]+"</td><td>"    {   BEGIN(RNUM); /* rbrinfo.* */ }
 <RGUT2>("</tr>"|"</TR>")                {
                                             /* kein Wert gefunden = 0 */
-                                            itemVal = 0;
+                                            itemNum = 0;
                                             printf("%6.0f\t", 0.0);
                                             genValue(-1.0, NO_HB);
                                             BEGIN(RR);
                                         }
 <RGUT2,RGUT3>.|\n                       {   /* ueberlesen */ }
 <RNUM>[0-9]*                            {
-                                            itemVal = atoi(yytext);
-                                            printf("%6.0f\t", itemVal);
-                                            genValue(itemVal, NO_HB);
+                                            itemNum = atoi(yytext);
+                                            printf("%6d\t", itemNum);
+                                            genValue(itemNum, NO_HB);
                                             BEGIN(RR);
                                         }
 <RNUM>[<&]                              {   BEGIN(RGUT2); }
@@ -460,14 +460,12 @@ void putName(char * name)
 void genNum(int keepNum)
 {
     int diff;
-    diff = itemVal - keepNum;
+    diff = itemNum - keepNum;
     if (diff > 0 && isSold) {
-        itemVal = diff;
         soldNum = diff;
         keptNum = keepNum;
     } else {
-        keptNum = itemVal;
-        itemVal = 0;
+        keptNum = itemNum;
         soldNum = 0;
     }
     printf("%6d\t", keptNum);
@@ -477,11 +475,12 @@ void genNum(int keepNum)
 void genValue(float textVal, int isHB)
 {
     char * name;
-    float val, keptVal;
+    float val, itemVal, keptVal;
     name = malloc(100);
+    if (isHB) itemNum = soldNum;
     if(isAlly) {
         printf("%8.2f\t", textVal);
-        itemVal *= textVal;
+        itemVal = itemNum * textVal;
         keptVal = textVal * keptNum;
         /* preisliste schreiben */
         fprintf(prices,"%s\t", item);
@@ -497,7 +496,7 @@ void genValue(float textVal, int isHB)
         }
         if(strcmp(name,item) == 0) {
             printf("%8.2f\t", val);
-            itemVal *= val;
+            itemVal = itemNum * val;
             keptVal = val * keptNum;
         } else {
             printf("     n/a\t");
