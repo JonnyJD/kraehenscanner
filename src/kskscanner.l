@@ -33,6 +33,7 @@ void genValue(float textVal, int isHB);
 void loadPrices();
 
 /* Hilfsfunktionen */
+int strlen_utf(char * name);
 void putName(char * name);
 void genNum(int keepNum);
 
@@ -380,6 +381,16 @@ int id(char * tag)
     else return 0;
 }
 
+int strlen_utf(char * name)
+{
+    int utf_special = 0;
+    int i;
+    for (i = 0; i < strlen(name); i++) {
+        if (name[i] == '\xC3') utf_special++;
+    }
+    return strlen(name) - utf_special;
+}
+
 void putName(char * name)
 {
     int i;
@@ -452,9 +463,9 @@ void putName(char * name)
     /* Ausgabeformatierung */
     strncpy(item, newName, 100);
     printf("%s", newName);
-    if (strlen(newName) <  8) printf("\t");
-    if (strlen(newName) < 16) printf("\t");
-    if (strlen(newName) < 24) printf("\t");
+    if (strlen_utf(newName) <  8) printf("\t");
+    if (strlen_utf(newName) < 16) printf("\t");
+    if (strlen_utf(newName) < 24) printf("\t");
 }
 
 void genNum(int keepNum)
@@ -484,9 +495,9 @@ void genValue(float textVal, int isHB)
         keptVal = textVal * keptNum;
         /* preisliste schreiben */
         fprintf(prices,"%s\t", item);
-        if (strlen(item) <  8) fprintf(prices, "\t");
-        if (strlen(item) < 16) fprintf(prices, "\t");
-        if (strlen(name) < 24) fprintf(prices, "\t");
+        if (strlen_utf(item) <  8) fprintf(prices, "\t");
+        if (strlen_utf(item) < 16) fprintf(prices, "\t");
+        if (strlen_utf(name) < 24) fprintf(prices, "\t");
         fprintf(prices,"%8.2f\n", textVal);
     }
     if(!isAlly) {
