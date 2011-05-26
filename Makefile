@@ -2,8 +2,8 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-VERSION := 1.4.9
-VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 23.09.2010"'
+VERSION := 1.4.10
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 26.05.2011"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner
