@@ -341,6 +341,7 @@ char * ally(int id)
         case 70: return("Nordwind\t\t\t[NW]");                 break;
         case 71: return("Ritterschule von Alirion\t[RSA]");    break;
         case 72: return("ausgesetzte Seeraeuber\t[SR]");       break;
+        case 73: return("BranscherBrigade\t\t[BRG]");          break;
         case 99: return("Test Spielleitung\t\t[G]");           break;
         default: return("?\t\t\t\t");                          break;
     }
