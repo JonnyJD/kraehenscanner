@@ -342,6 +342,7 @@ char * ally(int id)
         case 71: return("Ritterschule von Alirion\t[RSA]");    break;
         case 72: return("ausgesetzte Seeraeuber\t[SR]");       break;
         case 73: return("BranscherBrigade\t\t[BRG]");          break;
+        case 74: return("Akademie der Ritterschaft\t[AdR]");   break;
         case 99: return("Test Spielleitung\t\t[G]");           break;
         default: return("?\t\t\t\t");                          break;
     }
@@ -380,6 +381,8 @@ int id(char * tag)
     else if (strcmp(tag,"NW")  == 0) return 70;
     else if (strcmp(tag,"RSA") == 0) return 71;
     else if (strcmp(tag,"SR")  == 0) return 72;
+    else if (strcmp(tag,"BRG") == 0) return 73;
+    else if (strcmp(tag,"AdR") == 0) return 74;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
