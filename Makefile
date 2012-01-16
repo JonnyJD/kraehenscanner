@@ -2,8 +2,8 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-VERSION := 1.4.12
-VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 28.12.2011"'
+VERSION := 1.4.13
+VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 16.01.2012"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 
 linux: bin/kskscanner
@@ -26,7 +26,7 @@ src/kskscanner.c: Makefile
 
 install-home: bin/kskscanner
 	cp bin/kskscanner ~/bin
-	sudo cp bin/kskscanner /srv/http/cgi-bin/
+	sudo cp bin/kskscanner /srv/http/localhost/cgi-bin/
 
 install-server: bin/kskscanner
 	sudo cp bin/kskscanner /usr/lib/cgi-bin/
