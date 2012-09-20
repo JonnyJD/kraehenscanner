@@ -345,6 +345,7 @@ char * ally(int id)
         case 74: return("Akademie der Ritterschaft\t[AdR]");   break;
         case 75: return("Ritter des Phoenix\t\t[RdP]");        break;
         case 76: return("Ordo Radiantis Animi\t[ORA]");        break;
+        case 77: return("Elorias Woelfe\t\t[EW]");             break;
         case 99: return("Test Spielleitung\t\t[G]");           break;
         default: return("?\t\t\t\t");                          break;
     }
@@ -387,6 +388,7 @@ int id(char * tag)
     else if (strcmp(tag,"AdR") == 0) return 74;
     else if (strcmp(tag,"RdP") == 0) return 75;
     else if (strcmp(tag,"ORA") == 0) return 76;
+    else if (strcmp(tag,"EW")  == 0) return 77;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
