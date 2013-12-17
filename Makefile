@@ -2,7 +2,7 @@ LEX    := flex
 LFLAGS := 
 CC     := gcc
 CCW    := i486-mingw32-gcc
-VERSION := 1.4.16
+VERSION := 1.4.17
 VERSIONSTRING := '"kskscanner - Version $(VERSION) vom 17.12.2013"'
 CFLAGS := -Wall -pedantic -DVERSIONSTRING=$(VERSIONSTRING)
 

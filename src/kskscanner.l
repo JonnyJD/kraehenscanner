@@ -272,7 +272,7 @@ PF    ([^/]*\/)
                 }
 <TT><<EOF>>     {
                     int i, higherPos, max, pos;
-                    printf(" 0. Allianzlose\t\t\t\t%8.0f", sum);
+                    printf(" 0. Allianzlose\t\t\t\t\t%8.0f", sum);
                     printf("%5d%10.0f\n", num, sum/num);
                     higherPos = 999999999;
                     pos = 1;
@@ -296,8 +296,8 @@ PF    ([^/]*\/)
                         }
                         pos++;
                     } while (max > 0);
-                    printf("\t\t\t\t\t--------%15c\n", ' ');
-                    printf("Gesamt\t\t\t\t\t%8.0f", sum);
+                    printf("\t\t\t\t\t\t--------%15c\n", ' ');
+                    printf("Gesamt\t\t\t\t\t\t%8.0f", sum);
                     printf("%5d%10.0f\n\n", num, sum/num);
                     return 0;
                 }
@@ -311,44 +311,44 @@ PF    ([^/]*\/)
 char * ally(int id)
 {
     switch (id) {
-        case 16: return("Magistraten der Caldea\t[MAG]");      break;
-        case 17: return("Koenigliche Allianz\t\t[SL]");        break;
-        case 18: return("Zirkel der Erklaerten\t[ZdE]");       break;
-        case 22: return("Nations of Senoi\t\t[NoS]");          break;
-        case 23: return("SzasKhar\t\t[SK]");                   break;
-        case 25: return("Bewahrer der Heiligen Allianz\t[HA]");break;
-        case 31: return("Drachenritter\t\t[DR]");              break;
-        case 32: return("Raeubergilde\t\t[RG]");               break;
-        case 38: return("Piraten\t\t\t[P]");                   break;
-        case 43: return("Die 13. Krieger\t\t[d13K]");          break;
-        case 45: return("Schwerttaenzer\t\t[St]");             break;
-        case 48: return("Landsgemeinde Felsenau\t[LF]");       break;
-        case 51: return("Knights of Honor\t\t[KoH]");          break;
-        case 52: return("Die Bruderschaft\t\t[DB]");           break;
-        case 55: return("Konklave der Schatten\t[KdS]");       break;
-        case 56: return("Equilibrium\t\t\t[EQ]");              break;
-        case 59: return("Tempelwaechter\t\t[TW]");             break;
-        case 60: return("Karims Schwarze Kraehen\t[KSK]");     break;
-        case 61: return("Union freier Ritter\t\t[UfR]");       break;
-        case 62: return("Consortes Caelestes\t\t[CC]");        break;
-        case 63: return("Bund der Sitschan\t\t[BdS]");         break;
-        case 64: return("Die letzten Ritter Alirions\t[LRA]"); break;
-        case 65: return("Die Verrueckten\t\t[dV]");            break;
-        case 66: return("Dvergr altvorderer Waechter\t[DAW]"); break;
-        case 67: return("Raziels Klingen\t\t[RK]");            break;
-        case 68: return("Die Nebel von Avalon\t[NA]");         break;
-        case 69: return("Wiederstand\t\t\t[\"W\"]");           break;
-        case 70: return("Nordwind\t\t\t[NW]");                 break;
-        case 71: return("Ritterschule von Alirion\t[RSA]");    break;
-        case 72: return("ausgesetzte Seeraeuber\t[SR]");       break;
-        case 73: return("BranscherBrigade\t\t[BRG]");          break;
-        case 74: return("Akademie der Ritterschaft\t[AdR]");   break;
-        case 75: return("Ritter des Phoenix\t\t[RdP]");        break;
-        case 76: return("Ordo Radiantis Animi\t[ORA]");        break;
-        case 77: return("Elorias Woelfe\t\t[EW]");             break;
-        case 78: return("Katzenkotwerfer\t\t[Werfer]");        break;
-        case 99: return("Test Spielleitung\t\t[G]");           break;
-        default: return("?\t\t\t\t");                          break;
+        case 16: return("Magistraten der Caldea\t[MAG]\t");      break;
+        case 17: return("Koenigliche Allianz\t\t[SL]\t");        break;
+        case 18: return("Zirkel der Erklaerten\t[ZdE]\t");       break;
+        case 22: return("Nations of Senoi\t\t[NoS]\t");          break;
+        case 23: return("SzasKhar\t\t[SK]\t");                   break;
+        case 25: return("Bewahrer der Heiligen Allianz\t[HA]\t");break;
+        case 31: return("Drachenritter\t\t[DR]\t");              break;
+        case 32: return("Raeubergilde\t\t[RG]\t");               break;
+        case 38: return("Piraten\t\t\t[P]\t");                   break;
+        case 43: return("Die 13. Krieger\t\t[d13K]\t");          break;
+        case 45: return("Schwerttaenzer\t\t[St]\t");             break;
+        case 48: return("Landsgemeinde Felsenau\t[LF]\t");       break;
+        case 51: return("Knights of Honor\t\t[KoH]\t");          break;
+        case 52: return("Die Bruderschaft\t\t[DB]\t");           break;
+        case 55: return("Konklave der Schatten\t[KdS]\t");       break;
+        case 56: return("Equilibrium\t\t\t[EQ]\t");              break;
+        case 59: return("Tempelwaechter\t\t[TW]\t");             break;
+        case 60: return("Karims Schwarze Kraehen\t[KSK]\t");     break;
+        case 61: return("Union freier Ritter\t\t[UfR]\t");       break;
+        case 62: return("Consortes Caelestes\t\t[CC]\t");        break;
+        case 63: return("Bund der Sitschan\t\t[BdS]\t");         break;
+        case 64: return("Die letzten Ritter Alirions\t[LRA]\t"); break;
+        case 65: return("Die Verrueckten\t\t[dV]\t");            break;
+        case 66: return("Dvergr altvorderer Waechter\t[DAW]\t"); break;
+        case 67: return("Raziels Klingen\t\t[RK]\t");            break;
+        case 68: return("Die Nebel von Avalon\t[NA]\t");         break;
+        case 69: return("Wiederstand\t\t\t[\"W\"]\t");           break;
+        case 70: return("Nordwind\t\t\t[NW]\t");                 break;
+        case 71: return("Ritterschule von Alirion\t[RSA]\t");    break;
+        case 72: return("ausgesetzte Seeraeuber\t[SR]\t");       break;
+        case 73: return("BranscherBrigade\t\t[BRG]\t");          break;
+        case 74: return("Akademie der Ritterschaft\t[AdR]\t");   break;
+        case 75: return("Ritter des Phoenix\t\t[RdP]\t");        break;
+        case 76: return("Ordo Radiantis Animi\t[ORA]\t");        break;
+        case 77: return("Elorias Woelfe\t\t[EW]\t");             break;
+        case 78: return("Katzenkotwerfer\t\t[Werfer]");          break;
+        case 99: return("Test Spielleitung\t\t[G]\t");           break;
+        default: return("?\t\t\t\t\t");                          break;
     }
 }
 
