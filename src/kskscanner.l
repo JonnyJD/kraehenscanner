@@ -316,7 +316,7 @@ char * ally(int id)
         case 18: return("Zirkel der Erklaerten\t[ZdE]\t");       break;
         case 22: return("Nations of Senoi\t\t[NoS]\t");          break;
         case 23: return("SzasKhar\t\t[SK]\t");                   break;
-        case 25: return("Bewahrer der Heiligen Allianz\t[HA]\t");break;
+        case 25: return("Bewahrer der Heiligen Allianz[HA]\t");  break;
         case 31: return("Drachenritter\t\t[DR]\t");              break;
         case 32: return("Raeubergilde\t\t[RG]\t");               break;
         case 38: return("Piraten\t\t\t[P]\t");                   break;
@@ -348,7 +348,7 @@ char * ally(int id)
         case 77: return("Elorias Woelfe\t\t[EW]\t");             break;
         case 78: return("Katzenkotwerfer\t\t[Werfer]\t");        break;
         case 79: return("Verteidigungspakt gegen RK\t[VRK]\t");  break;
-        case 80: return("Bruderschaft des roten Orden\t[BrO]\t");break;
+        case 80: return("Bruderschaft des roten Orden[BrO]\t");  break;
         case 99: return("Test Spielleitung\t\t[G]\t");           break;
         default: return("?\t\t\t\t\t");                          break;
     }
