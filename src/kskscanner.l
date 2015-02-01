@@ -348,6 +348,7 @@ char * ally(int id)
         case 77: return("Elorias Woelfe\t\t[EW]\t");             break;
         case 78: return("Katzenkotwerfer\t\t[Werfer]\t");        break;
         case 79: return("Verteidigungspakt gegen RK\t[VRK]\t");  break;
+        case 80: return("Bruderschaft des roten Orden\t[BrO]\t");break;
         case 99: return("Test Spielleitung\t\t[G]\t");           break;
         default: return("?\t\t\t\t\t");                          break;
     }
@@ -393,6 +394,7 @@ int id(char * tag)
     else if (strcmp(tag,"EW")  == 0) return 77;
     else if (strcmp(tag,"Werfer")  == 0) return 78;
     else if (strcmp(tag,"VRK") == 0) return 79;
+    else if (strcmp(tag,"BrO") == 0) return 80;
     else if (strcmp(tag,"G")   == 0) return 99;
     else return 0;
 }
